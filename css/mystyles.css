@@ -14,6 +14,7 @@ ol img {
 body {
     background-color: #91ade0;
     text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 nav.navbar {
@@ -27,8 +28,37 @@ ol {
     color: black;
    
 }
-style {
-   font-family: Georgia, 'Times New Roman', Times, serif;
+
+/* Header Div */
+#header {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
+/* Content Div */
+#content {
+    min-height: calc(100vh - 120px);
+    padding: 20px;
+    margin: 20px 0;
+}
 
+/* Footer Div */
+#footer {
+    width: 100%;
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    border-top: 2px solid #f5913e;
+}
+
+#footer a {
+    color: #333;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#footer a:hover {
+    text-decoration: underline;
+}
