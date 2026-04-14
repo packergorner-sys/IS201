@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hockey Shooting Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #91ade0;
+            text-align: center;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: #f5913e;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 16px;
+            font-weight: 600;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .game-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .score-board {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #f5913e;
+        }
+
+        .goalie-area {
+            background: linear-gradient(135deg, #87ceeb 0%, #e0f6ff 100%);
+            border: 3px solid #333;
+            border-radius: 10px;
+            padding: 40px;
+            margin: 20px 0;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .goalie-area::before {
+            content: '🏒 🏒 🏒 🏒 🏒 🏒 🏒';
+            position: absolute;
+            top: 5px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 24px;
+            opacity: 0.3;
+            pointer-events: none;
+            letter-spacing: 15px;
+        }
+
+        .goalie-area::after {
+            content: '🏒 🏒 🏒 🏒 🏒 🏒 🏒';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 24px;
+            opacity: 0.3;
+            pointer-events: none;
+            letter-spacing: 15px;
+        }
+
+        .hockey-net {
+            position: relative;
+            width: 320px;
+            height: 240px;
+        }
+
+        .net-frame {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(200,200,200,0.3) 0%, rgba(200,200,200,0.3) 100%);
+            border: 4px solid #333;
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .net-frame::before {
+            content: '';
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border: 2px dashed #999;
+            border-radius: 15px;
+        }
+
+        .hole {
+            position: absolute;
+            cursor: pointer;
+            border-radius: 50%;
+            background: #000;
+            border: 2px solid #fff;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .hole::after {
+            content: '';
+            position: absolute;
+            font-size: 48px;
+        }
+
+        .hole.showing-save::after {
+            content: '🧤';
+            animation: showSave 0.6s ease-out;
+        }
+
+        @keyframes showSave {
+            0% { opacity: 1; transform: scale(0); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        .hole:hover {
+            transform: scale(1.15);
+            box-shadow: 0 0 15px rgba(255,255,255,0.8);
+        }
+
+        .hole:active {
+            transform: scale(0.9);
+        }
+
+        .hole-5:hover {
+            transform: translateX(-50%) scale(1.15);
+        }
+
+        .hole-5:active {
+            transform: translateX(-50%) scale(0.9);
+        }
+
+        /* Five holes positioned around the hockey net */
+        .hole-1 { width: 60px; height: 60px; top: 20px; left: 20px; }
+        .hole-2 { width: 60px; height: 60px; top: 20px; right: 20px; }
+        .hole-3 { width: 60px; height: 60px; bottom: 20px; left: 20px; }
+        .hole-4 { width: 60px; height: 60px; bottom: 20px; right: 20px; }
+        .hole-5 { width: 60px; height: 60px; bottom: 20px; left: 50%; transform: translateX(-50%); }
+
+        .message {
+            font-size: 18px;
+            margin: 15px 0;
+            height: 30px;
+            color: #f5913e;
+            font-weight: bold;
+        }
+
+        .buttons {
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #f5913e;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff6b6b;
+        }
+
+        .stats {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="../index.html">Home</a>
+        <a href="../scratch.html">Scratch</a>
+    </nav>
+
+    <h1>🏒 Hockey Shooting Game</h1>
+
+    <div class="game-container">
+        <div class="score-board">
+            Score: <span class="score" id="score">0</span> / 10
+        </div>
+
+        <p>Click on the holes to shoot and score!</p>
+
+        <div class="goalie-area">
+            <div class="hockey-net">
+                <div class="net-frame">
+                    <div class="hole hole-1" data-hole="1">1</div>
+                    <div class="hole hole-2" data-hole="2">2</div>
+                    <div class="hole hole-3" data-hole="3">3</div>
+                    <div class="hole hole-4" data-hole="4">4</div>
+                    <div class="hole hole-5" data-hole="5">5</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="buttons">
+            <button onclick="resetGame()">Reset Game</button>
+        </div>
+
+        <div class="stats">
+            <p>Shots Taken: <strong id="shots">0</strong></p>
+            <p>Accuracy: <strong id="accuracy">0</strong>%</p>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let shots = 0;
+        const maxShots = 10;
+        let blockedHoles = [];
+
+        const holes = document.querySelectorAll('.hole');
+
+        function getRandomBlockedHoles() {
+            const holeNumbers = [1, 2, 3, 4, 5];
+            let blocked = [];
+            for (let i = 0; i < 3; i++) {
+                const randomIndex = Math.floor(Math.random() * holeNumbers.length);
+                blocked.push(holeNumbers[randomIndex]);
+                holeNumbers.splice(randomIndex, 1);
+            }
+            return blocked;
+        }
+
+        function updateBlockedHoles() {
+            blockedHoles = getRandomBlockedHoles();
+            holes.forEach(hole => {
+                hole.classList.remove('blocked');
+            });
+        }
+
+        // Initialize blocked holes
+        updateBlockedHoles();
+
+        holes.forEach(hole => {
+            hole.addEventListener('click', function(e) {
+                if (shots >= maxShots) {
+                    document.getElementById('message').textContent = 'Game Over! Reset to play again.';
+                    return;
+                }
+
+                const holeNumber = parseInt(this.getAttribute('data-hole'));
+                shots++;
+
+                if (blockedHoles.includes(holeNumber)) {
+                    document.getElementById('message').textContent = '🛑 Blocked! The goalie saved it!';
+                    // Show glove emoji animation
+                    this.classList.add('showing-save');
+                    setTimeout(() => {
+                        this.classList.remove('showing-save');
+                    }, 600);
+                } else {
+                    score++;
+                    document.getElementById('message').textContent = `🎉 🚨 GOAL! 🚨 🎉 Hole #${holeNumber}!`;
+                    this.style.background = '#FFD700';
+                    setTimeout(() => {
+                        this.style.background = '#000';
+                    }, 300);
+                }
+
+                document.getElementById('score').textContent = score;
+                document.getElementById('shots').textContent = shots;
+
+                const accuracy = shots > 0 ? Math.round((score / shots) * 100) : 0;
+                document.getElementById('accuracy').textContent = accuracy;
+
+                // Set up new blocked holes for next shot
+                setTimeout(() => {
+                    if (shots < maxShots) {
+                        updateBlockedHoles();
+                    }
+                    if (score >= maxShots) {
+                        document.getElementById('message').textContent = '🏆 🚨 PERFECT! 10/10! 🚨 🏆';
+                    }
+                }, 500);
+            });
+        });
+
+        function resetGame() {
+            score = 0;
+            shots = 0;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('shots').textContent = '0';
+            document.getElementById('accuracy').textContent = '0';
+            document.getElementById('message').textContent = '';
+            updateBlockedHoles();
+            holes.forEach(hole => {
+                hole.style.background = '#000';
+                hole.classList.remove('showing-save');
+            });
+        }
+    </script>
+</body>
+</html>
